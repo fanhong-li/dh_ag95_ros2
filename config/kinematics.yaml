@@ -1,0 +1,15 @@
+# Kinematics configuration for DH AG95 gripper
+# Grippers typically don't need inverse kinematics solvers
+# They use direct joint control instead
+
+# gripper:
+#   kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+#   kinematics_solver_search_resolution: 0.005
+#   kinematics_solver_timeout: 0.05
+#   kinematics_solver_attempts: 3
+#   kinematics_solver_ik_links:
+#     - gripper_finger1_finger_tip_link
+#     - gripper_finger2_finger_tip_link
+
+# For grippers, we disable kinematics solver and use direct joint control
+# This prevents the "Group 'gripper' is not a chain" error 

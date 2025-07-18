@@ -46,6 +46,9 @@ def generate_launch_description():
             'max_position': 100.0,  # AG95最大开口100mm
             'max_force': 100.0,     # AG95最大夹持力100N
         }],
+        remappings=[
+            ('/joint_states', '/gripper/joint_states')  # Remap to avoid conflict with static publisher
+        ],
         output='screen'
     )
     

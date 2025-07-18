@@ -8,14 +8,16 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
-# Generate messages
+# Generate messages and actions
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/GripperCtrl.msg"
   "msg/GripperState.msg"
+  "action/GripperCommand.action"
   DEPENDENCIES std_msgs sensor_msgs
 )
 
@@ -35,15 +37,70 @@ ament_target_dependencies(dh_ag95_driver
 rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
 target_link_libraries(dh_ag95_driver "${cpp_typesupport_target}")
 
+# Create action server executable
+add_executable(gripper_action_server src/gripper_action_server.cpp)
+
+ament_target_dependencies(gripper_action_server
+  rclcpp
+  rclcpp_action
+  std_msgs
+  sensor_msgs
+)
+
+target_link_libraries(gripper_action_server "${cpp_typesupport_target}")
+
+# Create action client example executable
+add_executable(gripper_action_client_example src/gripper_action_client_example.cpp)
+
+ament_target_dependencies(gripper_action_client_example
+  rclcpp
+  rclcpp_action
+)
+
+target_link_libraries(gripper_action_client_example "${cpp_typesupport_target}")
+
 # Install targets
 install(TARGETS
   dh_ag95_driver
+  gripper_action_server
+  gripper_action_client_example
   DESTINATION lib/${PROJECT_NAME}
 )
 
 # Install launch files
 install(DIRECTORY
   launch
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+# Install URDF files
+install(DIRECTORY
+  urdf
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+# Install config files
+install(DIRECTORY
+  config
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+# Install RViz files
+install(DIRECTORY
+  rviz
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+# Install scripts
+install(DIRECTORY
+  scripts
+  DESTINATION share/${PROJECT_NAME}/
+  USE_SOURCE_PERMISSIONS
+)
+
+# Install meshes
+install(DIRECTORY
+  meshes
   DESTINATION share/${PROJECT_NAME}/
 )
 

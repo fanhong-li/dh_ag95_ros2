@@ -3,22 +3,61 @@
 <package format="3">
   <name>dh_ag95_gripper</name>
   <version>1.0.0</version>
-  <description>DH AG95 gripper ROS2 driver and control package</description>
-  <maintainer email="user@example.com">User</maintainer>
+  <description>DH AG95 gripper ROS2 package with MoveIt integration</description>
+  <maintainer email="your.email@example.com">Your Name</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <buildtool_depend>rosidl_default_generators</buildtool_depend>
 
-  <!-- ROS2 core dependencies -->
+  <!-- Core ROS2 dependencies -->
   <depend>rclcpp</depend>
-  
-  <!-- Message and service dependencies -->
+  <depend>rclcpp_action</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>trajectory_msgs</depend>
   
-  <!-- Runtime dependencies for messages -->
+  <!-- Robot description and URDF -->
+  <depend>robot_state_publisher</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>joint_state_publisher_gui</depend>
+  <depend>urdf</depend>
+  <depend>xacro</depend>
+  
+  <!-- MoveIt dependencies -->
+  <depend>moveit_core</depend>
+  <depend>moveit_ros_planning</depend>
+  <depend>moveit_ros_planning_interface</depend>
+  <depend>moveit_ros_move_group</depend>
+  <depend>moveit_kinematics</depend>
+  <depend>moveit_planners</depend>
+  <depend>moveit_simple_controller_manager</depend>
+  <depend>moveit_configs_utils</depend>
+  
+  <!-- Controllers -->
+  <depend>ros2_control</depend>
+  <depend>ros2_controllers</depend>
+  <depend>controller_manager</depend>
+  <depend>joint_trajectory_controller</depend>
+  <depend>joint_state_broadcaster</depend>
+  
+  <!-- Visualization -->
+  <depend>rviz2</depend>
+  <depend>rviz_common</depend>
+  <depend>rviz_default_plugins</depend>
+  <depend>moveit_rviz_plugin</depend>
+  
+  <!-- Serial communication -->
+  <depend>serial</depend>
+  
+  <!-- Planning -->
+  <depend>ompl</depend>
+  <depend>pilz_industrial_motion_planner</depend>
+  
+  <!-- Build dependencies -->
+  <build_depend>rosidl_default_generators</build_depend>
   <exec_depend>rosidl_default_runtime</exec_depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
@@ -26,6 +65,4 @@
   <export>
     <build_type>ament_cmake</build_type>
   </export>
-  
-  <member_of_group>rosidl_interface_packages</member_of_group>
 </package> 

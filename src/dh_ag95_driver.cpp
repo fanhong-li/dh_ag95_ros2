@@ -528,15 +528,41 @@ private:
         joint_state.header.stamp = this->now();
         joint_state.header.frame_id = "gripper_base_link";
         
-        // DH AG95有两个关节
-        joint_state.name = {"gripper_finger1_joint", "gripper_finger2_joint"};
+        // Use joint names that match the URDF definition
+        joint_state.name = {
+            "gripper_finger1_joint",
+            "gripper_finger1_finger_joint", 
+            "gripper_finger2_joint",
+            "gripper_finger2_finger_joint",
+            "gripper_finger1_inner_knuckle_joint",
+            "gripper_finger1_finger_tip_joint",
+            "gripper_finger2_inner_knuckle_joint",
+            "gripper_finger2_finger_tip_joint"
+        };
         
-        // 将位置转换为关节角度 (参考DH官方实现)
-        double joint_angle = (1000 - (gripper_state_.position / max_position_ * 1000)) / 1000.0 * 0.637;
-        joint_state.position = {joint_angle, -joint_angle};
+        // Convert position to joint angle (reference DH official implementation)
+        // Position: 0-100mm -> Joint angle: 0-0.637 rad
+        double main_joint_angle = (1000 - (gripper_state_.position / max_position_ * 1000)) / 1000.0 * 0.637;
+        double finger_joint_angle = main_joint_angle * 0.4563942;  // Mimic multiplier
+        double inner_knuckle_angle = main_joint_angle * 1.49462955;  // Mimic multiplier
+        double finger_tip_angle = finger_joint_angle;  // Same as finger joint
         
-        joint_state.velocity = {0.0, 0.0};
-        joint_state.effort = {gripper_state_.current_force, gripper_state_.current_force};
+        joint_state.position = {
+            main_joint_angle,           // gripper_finger1_joint
+            finger_joint_angle,         // gripper_finger1_finger_joint
+            main_joint_angle,           // gripper_finger2_joint (mimic)
+            finger_joint_angle,         // gripper_finger2_finger_joint (mimic)
+            inner_knuckle_angle,        // gripper_finger1_inner_knuckle_joint
+            finger_tip_angle,           // gripper_finger1_finger_tip_joint
+            inner_knuckle_angle,        // gripper_finger2_inner_knuckle_joint
+            finger_tip_angle            // gripper_finger2_finger_tip_joint
+        };
+        
+        joint_state.velocity = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        joint_state.effort = {
+            gripper_state_.current_force, 0.0, gripper_state_.current_force, 0.0,
+            0.0, 0.0, 0.0, 0.0
+        };
         
         joint_state_pub_->publish(joint_state);
     }
